@@ -42,6 +42,7 @@ class ExpenseData
   attr_reader :connection
   def initialize
     @connection = PG.connect(dbname: "expenses")
+    setup_schema
   end
   
   def add_expense(amount, memo, date)
@@ -114,6 +115,14 @@ class ExpenseData
   def display_total(total)
     puts '-' * 35
     puts ("Total" + sprintf('%.2f', total).rjust(26))
+  end
+  
+  def setup_schema
+    result = connection.exec_params("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'expenses';")
+    if result[0]['count'] == '0'
+      setup_commands = File.read('schema.sql')
+      connection.exec_params(setup_commands)
+    end
   end
 end
 
