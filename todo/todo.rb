@@ -16,7 +16,7 @@ end
 
 helpers do
   def list_complete?(list)
-    todos_count(list) > 0 && todos_remaining_count(list) == 0
+    todos_count(list) > 0 && todos_remaining_count(list) == todos_count(list)
   end
 
   def list_class(list)
@@ -28,7 +28,6 @@ helpers do
   end
 
   def todos_remaining_count(list)
-    puts list[:todos]
     list[:todos].count { |todo| todo[:completed] }
   end
 
